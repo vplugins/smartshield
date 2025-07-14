@@ -23,8 +23,11 @@ use SmartShield\Admin\SettingsPage;
 use SmartShield\Front\IPBlockerFrontend;
 use SmartShield\Front\LoginHandlerFrontend;
 use SmartShield\Front\SpamHandlerFrontend;
+use SmartShield\Front\EmailHandlerFrontend;
 use SmartShield\Modules\LoginHandler\LoginHandler;
 use SmartShield\Modules\SpamHandler\SpamHandler;
+use SmartShield\Modules\EmailHandler\EmailHandler;
+
 
 // Initialize the plugin
 function smart_shield_init() {
@@ -43,5 +46,11 @@ function smart_shield_init() {
     // Load spam handler (both backend and frontend)
     new SpamHandler();
     new SpamHandlerFrontend();
+    
+    // Load email handler (both backend and frontend)
+    error_log('Smart Shield: Creating EmailHandler instances');
+    new EmailHandler();
+    new EmailHandlerFrontend();
+    error_log('Smart Shield: EmailHandler instances created');
 }
 add_action( 'plugins_loaded', 'smart_shield_init' );

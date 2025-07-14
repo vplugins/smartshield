@@ -22,7 +22,9 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 use SmartShield\Admin\SettingsPage;
 use SmartShield\Front\IPBlockerFrontend;
 use SmartShield\Front\LoginHandlerFrontend;
+use SmartShield\Front\SpamHandlerFrontend;
 use SmartShield\Modules\LoginHandler\LoginHandler;
+use SmartShield\Modules\SpamHandler\SpamHandler;
 
 // Initialize the plugin
 function smart_shield_init() {
@@ -37,5 +39,9 @@ function smart_shield_init() {
     // Load login handler (both backend and frontend)
     new LoginHandler();
     new LoginHandlerFrontend();
+    
+    // Load spam handler (both backend and frontend)
+    new SpamHandler();
+    new SpamHandlerFrontend();
 }
 add_action( 'plugins_loaded', 'smart_shield_init' );

@@ -109,12 +109,6 @@ class SettingsPage {
     }
 
     public function create_dashboard_page() {
-        // Handle sample logs generation
-        if (isset($_POST['generate_sample_logs']) && wp_verify_nonce($_POST['sample_logs_nonce'], 'generate_sample_logs')) {
-            $this->logger->generate_sample_logs();
-            echo '<div class="notice notice-success"><p>Sample logs generated successfully!</p></div>';
-        }
-        
         $stats = $this->logger->get_stats();
         $recent_logs = $this->logger->get_recent_logs(5);
         ?>
@@ -240,18 +234,9 @@ class SettingsPage {
                         <div class="postbox">
                             <div class="smart-shield-postbox-header">
                                 <h2 class="hndle"><span>Recent Activity</span></h2>
-                                <div class="button-group">
-                                    <form method="post" style="display: inline-block;">
-                                        <?php wp_nonce_field('generate_sample_logs', 'sample_logs_nonce'); ?>
-                                        <button type="submit" name="generate_sample_logs" class="button button-small smart-shield-sample-btn"
-                                                onclick="return confirm('This will generate sample log entries. Continue?')">
-                                            Generate Sample Logs
-                                        </button>
-                                    </form>
-                                    <button type="button" class="button smart-shield-refresh-btn" data-refresh="logs">
-                                        <span class="dashicons dashicons-update"></span>
-                                    </button>
-                                </div>
+                                <button type="button" class="button smart-shield-refresh-btn" data-refresh="logs">
+                                    <span class="dashicons dashicons-update"></span>
+                                </button>
                             </div>
                             <div class="inside" id="recent-logs">
                                 <?php if (empty($recent_logs)): ?>

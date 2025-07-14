@@ -48,9 +48,7 @@ function smart_shield_init() {
     new SpamHandlerFrontend();
     
     // Load email handler (both backend and frontend)
-    error_log('Smart Shield: Creating EmailHandler instances');
     new EmailHandler();
     new EmailHandlerFrontend();
-    error_log('Smart Shield: EmailHandler instances created');
 }
 add_action( 'plugins_loaded', 'smart_shield_init' );

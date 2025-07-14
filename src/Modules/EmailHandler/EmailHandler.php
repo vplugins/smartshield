@@ -18,21 +18,15 @@ class EmailHandler {
         
         // Initialize hooks
         add_action('init', [$this, 'init']);
-        
-        // Add a test action for debugging
-        add_action('wp_loaded', [$this, 'test_email_functionality']);
     }
     
     /**
      * Initialize the email handler
      */
     public function init() {
-        // Always add the filter to test if it's working
+        // Hook into wp_mail function
         add_filter('wp_mail', [$this, 'check_email_spam'], 10, 1);
         add_action('wp_mail', [$this, 'log_email_attempt'], 10, 1);
-        
-        error_log('EmailHandler: init() called and wp_mail hooks added');
-        error_log('EmailHandler: ss_email_enabled = ' . (get_option('ss_email_enabled') ? 'true' : 'false'));
     }
     
     /**
@@ -42,30 +36,22 @@ class EmailHandler {
      * @return array The email data (potentially modified or blocked)
      */
     public function check_email_spam($mail_data) {
-        // Debug logging
-        error_log('EmailHandler: check_email_spam called with data: ' . print_r($mail_data, true));
-        
         // Validate mail data structure
         if (!is_array($mail_data) || empty($mail_data)) {
-            error_log('EmailHandler: Invalid mail_data structure, skipping');
             return $mail_data;
         }
         
         // Skip if email protection is disabled
         if (!get_option('ss_email_enabled')) {
-            error_log('EmailHandler: Email protection disabled, skipping');
             return $mail_data;
         }
         
         // Get AI API key
         $api_key = get_option('ss_ai_api_key');
         if (empty($api_key)) {
-            error_log('EmailHandler: AI API key not configured');
             $this->logger->log_event('email', 'AI API key not configured', 'error');
             return $mail_data;
         }
-        
-        error_log('EmailHandler: AI API key found, proceeding with spam check');
         
         // Get current IP
         $ip_address = $this->get_client_ip();
@@ -103,56 +89,30 @@ class EmailHandler {
             
             // Check if email is spam
             $is_spam = $this->spamHandler->is_spam($message, 'email', $context);
-            error_log('EmailHandler: Spam detection result: ' . ($is_spam ? 'SPAM' : 'LEGITIMATE') . " for subject: {$subject}");
             
             if ($is_spam) {
                 // Log spam detection
                 $this->logger->log_event('email', "Spam email detected from {$ip_address}: Subject: {$subject}", 'blocked');
-                error_log('EmailHandler: Email identified as spam, processing with handle_spam_email');
                 
                 // Block IP address
                 $this->block_spam_ip($ip_address, 'email_spam');
                 
                 // Handle spam email based on settings
-                $result = $this->handle_spam_email($mail_data);
-                error_log('EmailHandler: handle_spam_email returned: ' . print_r($result, true));
-                return $result;
+                return $this->handle_spam_email($mail_data);
             } else {
                 // Log legitimate email
                 $this->logger->log_event('email', "Legitimate email from {$ip_address}: Subject: {$subject}", 'allowed');
-                error_log('EmailHandler: Email identified as legitimate, allowing through');
             }
             
         } catch (Exception $e) {
             // Log error
             $this->logger->log_event('email', "AI email spam detection error: " . $e->getMessage(), 'error');
-            error_log('EmailHandler: Exception occurred: ' . $e->getMessage());
             
             // Allow email on error (fail-safe)
             return $mail_data;
         }
         
-        error_log('EmailHandler: Returning mail_data at end of function: ' . print_r($mail_data, true));
         return $mail_data;
-    }
-    
-    /**
-     * Test email functionality - temporary debug function
-     */
-    public function test_email_functionality() {
-        // Only run once per session to avoid spam
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        if (!isset($_SESSION['email_test_done'])) {
-            $_SESSION['email_test_done'] = true;
-            error_log('EmailHandler: Testing wp_mail functionality');
-            
-            // Test wp_mail with a simple email
-            $test_result = wp_mail('test@example.com', 'Test Email', 'This is a test email from EmailHandler');
-            error_log('EmailHandler: wp_mail test result: ' . ($test_result ? 'SUCCESS' : 'FAILED'));
-        }
     }
     
     /**
@@ -163,24 +123,19 @@ class EmailHandler {
      */
     private function handle_spam_email($mail_data) {
         // Check if spam warning is enabled
-        $spam_warning_enabled = get_option('ss_email_enable_spam_warning');
-        error_log('EmailHandler: handle_spam_email called, spam_warning_enabled: ' . ($spam_warning_enabled ? 'yes' : 'no'));
-        
-        if ($spam_warning_enabled) {
+        if (get_option('ss_email_enable_spam_warning')) {
             // Just add SPAM to subject, don't modify the email content
             $current_subject = $mail_data['subject'] ?? 'No Subject';
             $mail_data['subject'] = 'SPAM ' . $current_subject;
             
             // Log warning sent
             $this->logger->log_event('email', "Spam warning added to email: " . $mail_data['subject'], 'warning');
-            error_log('EmailHandler: Added SPAM prefix to subject, returning modified mail_data');
             
             return $mail_data;
         } else {
             // Block email completely
             $subject = $mail_data['subject'] ?? 'No Subject';
             $this->logger->log_event('email', "Email blocked: " . $subject, 'blocked');
-            error_log('EmailHandler: Blocking email completely, returning false');
             
             // Return false to prevent email from being sent
             return false;

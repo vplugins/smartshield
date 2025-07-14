@@ -46,6 +46,19 @@ class LogsPage {
                                         <h3 style="margin: 0; font-size: 24px; color: #00a32a;"><?php echo count($stats['top_ips']); ?></h3>
                                         <p style="margin: 5px 0 0 0;">Unique IPs</p>
                                     </div>
+                                    <div class="stat-box" style="text-align: center; padding: 10px; background: #f0f0f1; border-radius: 5px;">
+                                        <?php 
+                                        $max_logs = get_option('ss_max_logs_count', 10000);
+                                        $limit_text = ($max_logs == -1) ? 'Unlimited' : number_format($max_logs);
+                                        $percentage = ($max_logs != -1 && $max_logs > 0) ? round(($stats['total'] / $max_logs) * 100, 1) : 0;
+                                        $color = ($percentage > 90) ? '#d63638' : (($percentage > 75) ? '#f56e28' : '#00a32a');
+                                        ?>
+                                        <h3 style="margin: 0; font-size: 24px; color: <?php echo $color; ?>;"><?php echo $limit_text; ?></h3>
+                                        <p style="margin: 5px 0 0 0;">Storage Limit</p>
+                                        <?php if ($max_logs != -1): ?>
+                                            <small style="color: #666;"><?php echo $percentage; ?>% used</small>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                                 
                                 <div style="display: flex; justify-content: space-between;">
@@ -98,6 +111,23 @@ class LogsPage {
                         
                         <input type="submit" class="button" value="Filter" />
                         <a href="<?php echo admin_url('admin.php?page=smart-shield-logs'); ?>" class="button">Clear</a>
+                    </form>
+                </div>
+                
+                <div class="alignright actions">
+                    <form method="post" style="display: inline-block; margin-right: 10px;">
+                        <?php wp_nonce_field('smart_shield_cleanup_logs', 'cleanup_nonce'); ?>
+                        <input type="hidden" name="action" value="cleanup_logs_by_count">
+                        <input type="submit" class="button" value="Cleanup to Limit" 
+                               onclick="return confirm('This will remove old log entries to stay within the storage limit. Continue?')" />
+                    </form>
+                    
+                    <form method="post" style="display: inline-block;">
+                        <?php wp_nonce_field('smart_shield_cleanup_logs', 'cleanup_nonce'); ?>
+                        <input type="hidden" name="action" value="cleanup_logs_by_days">
+                        <input type="number" name="cleanup_days" value="30" min="1" max="365" style="width: 60px;" />
+                        <input type="submit" class="button" value="Cleanup by Days" 
+                               onclick="return confirm('This will permanently delete log entries older than the specified days. Continue?')" />
                     </form>
                 </div>
             </div>
@@ -231,12 +261,34 @@ class LogsPage {
 
     private function handle_bulk_actions() {
         // Handle any bulk actions if needed
-        if (isset($_POST['action']) && $_POST['action'] === 'cleanup_logs') {
-            $days = intval($_POST['cleanup_days']);
-            if ($days > 0) {
-                $this->logger->cleanup_old_logs($days);
-                add_action('admin_notices', function() use ($days) {
-                    echo '<div class="notice notice-success"><p>Logs older than ' . $days . ' days have been cleaned up.</p></div>';
+        if (isset($_POST['action'])) {
+            // Verify nonce for security
+            if (!wp_verify_nonce($_POST['cleanup_nonce'], 'smart_shield_cleanup_logs')) {
+                wp_die('Security check failed');
+            }
+            
+            if (!current_user_can('manage_options')) {
+                wp_die('Insufficient permissions');
+            }
+            
+            $action = sanitize_text_field($_POST['action']);
+            
+            if ($action === 'cleanup_logs_by_days') {
+                $days = intval($_POST['cleanup_days']);
+                if ($days > 0) {
+                    $deleted = $this->logger->cleanup_old_logs($days);
+                    add_action('admin_notices', function() use ($days, $deleted) {
+                        echo '<div class="notice notice-success"><p>' . number_format($deleted) . ' log entries older than ' . $days . ' days have been cleaned up.</p></div>';
+                    });
+                }
+            } elseif ($action === 'cleanup_logs_by_count') {
+                $deleted = $this->logger->cleanup_logs_by_count();
+                add_action('admin_notices', function() use ($deleted) {
+                    if ($deleted > 0) {
+                        echo '<div class="notice notice-success"><p>' . number_format($deleted) . ' old log entries have been cleaned up to stay within the storage limit.</p></div>';
+                    } else {
+                        echo '<div class="notice notice-info"><p>No cleanup needed. Log count is within the storage limit.</p></div>';
+                    }
                 });
             }
         }

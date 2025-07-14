@@ -60,6 +60,9 @@ class Logger {
             ),
             array('%s', '%s', '%s', '%s', '%s', '%s')
         );
+        
+        // Check and cleanup if we exceed the log limit
+        $this->enforce_log_limit();
     }
 
     /**
@@ -166,17 +169,111 @@ class Logger {
     }
 
     /**
+     * Enforce log limit by cleaning up old entries
+     */
+    private function enforce_log_limit() {
+        $max_logs = get_option('ss_max_logs_count', 10000);
+        
+        // Skip if unlimited (-1) or invalid value
+        if ($max_logs == -1 || $max_logs <= 0) {
+            return;
+        }
+        
+        global $wpdb;
+        
+        // Get current count
+        $current_count = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name}");
+        
+        // If we exceed the limit, delete oldest entries
+        if ($current_count > $max_logs) {
+            $excess_count = $current_count - $max_logs;
+            
+            $wpdb->query($wpdb->prepare(
+                "DELETE FROM {$this->table_name} 
+                ORDER BY created_at ASC 
+                LIMIT %d",
+                $excess_count
+            ));
+        }
+    }
+    
+    /**
+     * Cleanup logs by count (remove oldest entries to stay within limit)
+     */
+    public function cleanup_logs_by_count($max_count = null) {
+        if ($max_count === null) {
+            $max_count = get_option('ss_max_logs_count', 10000);
+        }
+        
+        // Skip if unlimited (-1) or invalid value
+        if ($max_count == -1 || $max_count <= 0) {
+            return 0;
+        }
+        
+        global $wpdb;
+        
+        // Get current count
+        $current_count = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name}");
+        
+        if ($current_count > $max_count) {
+            $excess_count = $current_count - $max_count;
+            
+            $deleted = $wpdb->query($wpdb->prepare(
+                "DELETE FROM {$this->table_name} 
+                ORDER BY created_at ASC 
+                LIMIT %d",
+                $excess_count
+            ));
+            
+            return $deleted;
+        }
+        
+        return 0;
+    }
+    
+    /**
      * Clean old logs
      */
     public function cleanup_old_logs($days = 30) {
         global $wpdb;
         
-        $wpdb->query($wpdb->prepare(
+        $deleted = $wpdb->query($wpdb->prepare(
             "DELETE FROM {$this->table_name} WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
             $days
         ));
+        
+        return $deleted;
     }
 
+    /**
+     * Get log count information
+     */
+    public function get_log_count_info() {
+        global $wpdb;
+        
+        $current_count = $wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name}");
+        $max_logs = get_option('ss_max_logs_count', 10000);
+        
+        $info = [
+            'current_count' => $current_count,
+            'max_logs' => $max_logs,
+            'is_unlimited' => ($max_logs == -1),
+            'percentage_used' => 0,
+            'remaining_space' => 0,
+            'is_near_limit' => false,
+            'is_over_limit' => false
+        ];
+        
+        if ($max_logs != -1 && $max_logs > 0) {
+            $info['percentage_used'] = round(($current_count / $max_logs) * 100, 1);
+            $info['remaining_space'] = max(0, $max_logs - $current_count);
+            $info['is_near_limit'] = $info['percentage_used'] > 75;
+            $info['is_over_limit'] = $current_count > $max_logs;
+        }
+        
+        return $info;
+    }
+    
     /**
      * Generate sample logs for testing (can be removed in production)
      */

@@ -24,7 +24,7 @@ class IPBlockerHelper {
     /**
      * Block an IP address with default settings
      */
-    public static function block_ip($ip_address, $reason = '', $duration = IPBlocker::DURATION_24_HOURS) {
+    public static function block_ip($ip_address, $reason = '', $duration = null) {
         return self::get_instance()->block_ip($ip_address, $duration, $reason, 'auto_system');
     }
     
@@ -152,7 +152,7 @@ class IPBlockerHelper {
     /**
      * Bulk block multiple IPs
      */
-    public static function bulk_block_ips($ip_addresses, $reason = '', $duration = IPBlocker::DURATION_24_HOURS) {
+    public static function bulk_block_ips($ip_addresses, $reason = '', $duration = null) {
         $results = [];
         foreach ($ip_addresses as $ip) {
             $results[$ip] = self::block_ip($ip, $reason, $duration);
@@ -190,7 +190,7 @@ class IPBlockerHelper {
     /**
      * Block IP if not whitelisted
      */
-    public static function block_if_not_whitelisted($ip_address, $reason = '', $duration = IPBlocker::DURATION_24_HOURS) {
+    public static function block_if_not_whitelisted($ip_address, $reason = '', $duration = null) {
         if (self::is_whitelisted($ip_address)) {
             return false; // Don't block whitelisted IPs
         }

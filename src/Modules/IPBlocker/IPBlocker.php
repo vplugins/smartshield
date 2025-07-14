@@ -85,7 +85,11 @@ class IPBlocker {
     /**
      * Block an IP address
      */
-    public function block_ip($ip_address, $duration = self::DURATION_24_HOURS, $reason = '', $blocked_by = 'system') {
+    public function block_ip($ip_address, $duration = null, $reason = '', $blocked_by = 'system') {
+        // If no duration specified, get from settings
+        if ($duration === null) {
+            $duration = $this->get_default_duration();
+        }
         global $wpdb;
         
         // Validate IP address
@@ -411,6 +415,30 @@ class IPBlocker {
             current_time('mysql'),
             $block_id
         ));
+    }
+    
+    /**
+     * Get default block duration from settings
+     */
+    private function get_default_duration() {
+        // Get default duration from settings, fallback to 24 hours
+        $default_duration = get_option('ss_default_block_duration', self::DURATION_24_HOURS);
+        
+        // Validate that it's a valid duration
+        $valid_durations = [
+            self::DURATION_1_HOUR,
+            self::DURATION_6_HOURS,
+            self::DURATION_24_HOURS,
+            self::DURATION_7_DAYS,
+            self::DURATION_30_DAYS,
+            self::DURATION_PERMANENT
+        ];
+        
+        if (!in_array($default_duration, $valid_durations)) {
+            $default_duration = self::DURATION_24_HOURS;
+        }
+        
+        return $default_duration;
     }
     
     /**

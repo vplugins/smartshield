@@ -160,7 +160,7 @@ class LoginHandler {
         $reason = sprintf('Blocked after %d failed login attempts', $attempts);
         
         // Block the IP using IPBlocker with 24 hour duration
-        IPBlockerHelper::block_ip($ip_address, $reason, 86400);
+                    IPBlockerHelper::block_ip($ip_address, $reason);
         
         // Clear attempts since IP is now blocked
         $this->clear_failed_attempts($ip_address);

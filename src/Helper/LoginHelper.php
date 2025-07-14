@@ -98,7 +98,7 @@ class LoginHelper {
         $full_reason = $reason ?: "Blocked after {$attempts} failed login attempts";
         
         // Block for 24 hours
-        return IPBlockerHelper::block_ip($ip_address, $full_reason, 86400);
+        return IPBlockerHelper::block_ip($ip_address, $full_reason);
     }
     
     /**

@@ -1,0 +1,452 @@
+/* Smart Shield Admin Styles - WordPress Native */
+
+/* Statistics Cards */
+.smart-shield-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.smart-shield-stat-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.3s ease;
+}
+
+.smart-shield-stat-card:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.smart-shield-stat-card h3 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 600;
+    color: #1d2327;
+    line-height: 1.2;
+}
+
+.smart-shield-stat-card p {
+    margin: 8px 0 0 0;
+    color: #646970;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.smart-shield-stat-card.total-events h3 {
+    color: #0073aa;
+}
+
+.smart-shield-stat-card.recent-24h h3 {
+    color: #d63638;
+}
+
+.smart-shield-stat-card.unique-ips h3 {
+    color: #00a32a;
+}
+
+.smart-shield-stat-card.blocked-today h3 {
+    color: #f56e28;
+}
+
+/* Settings Grid */
+.smart-shield-settings-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.smart-shield-setting-card {
+    display: block;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #1d2327;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.smart-shield-setting-card:hover {
+    background: #f6f7f7;
+    border-color: #8c8f94;
+    color: #1d2327;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.smart-shield-setting-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.smart-shield-setting-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #646970;
+}
+
+.smart-shield-setting-card.login h4 {
+    color: #d63638;
+}
+
+.smart-shield-setting-card.comment h4 {
+    color: #f56e28;
+}
+
+.smart-shield-setting-card.email h4 {
+    color: #0073aa;
+}
+
+.smart-shield-setting-card.other h4 {
+    color: #8f2d00;
+}
+
+/* Status Items */
+.smart-shield-status-grid {
+    display: grid;
+    gap: 8px;
+}
+
+.smart-shield-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.smart-shield-status-item:hover {
+    background: #f0f0f1;
+}
+
+.smart-shield-status-item strong {
+    color: #1d2327;
+    font-size: 14px;
+}
+
+.smart-shield-status-badge {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.smart-shield-status-badge.active {
+    color: #00a32a;
+}
+
+.smart-shield-status-badge.inactive {
+    color: #d63638;
+}
+
+.smart-shield-status-badge.configured {
+    color: #00a32a;
+}
+
+.smart-shield-status-badge.not-configured {
+    color: #f56e28;
+}
+
+/* Recent Logs */
+.smart-shield-recent-logs-list {
+    display: grid;
+    gap: 8px;
+}
+
+.smart-shield-log-item {
+    padding: 12px 15px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.smart-shield-log-item:hover {
+    background: #f0f0f1;
+}
+
+.smart-shield-log-item.event-login {
+    border-left: 4px solid #d63638;
+}
+
+.smart-shield-log-item.event-comment {
+    border-left: 4px solid #f56e28;
+}
+
+.smart-shield-log-item.event-email {
+    border-left: 4px solid #0073aa;
+}
+
+.smart-shield-log-item.event-ip_block {
+    border-left: 4px solid #8f2d00;
+}
+
+.smart-shield-log-item.event-ai_detection {
+    border-left: 4px solid #7b2d94;
+}
+
+.smart-shield-log-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.smart-shield-log-left {
+    flex: 1;
+}
+
+.smart-shield-log-right {
+    text-align: right;
+}
+
+.smart-shield-event-type {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.smart-shield-log-ip {
+    font-size: 12px;
+    color: #646970;
+    font-family: monospace;
+}
+
+.smart-shield-log-status {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.smart-shield-log-status.blocked {
+    color: #d63638;
+}
+
+.smart-shield-log-status.allowed {
+    color: #00a32a;
+}
+
+.smart-shield-log-status.pending {
+    color: #f56e28;
+}
+
+.smart-shield-log-status.warning {
+    color: #dba617;
+}
+
+.smart-shield-log-time {
+    font-size: 12px;
+    color: #8c8f94;
+}
+
+/* Postbox Headers */
+.smart-shield-postbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #c3c4c7;
+    background: #f6f7f7;
+}
+
+.smart-shield-postbox-header h2 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.smart-shield-postbox-header .button-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Refresh Button */
+.smart-shield-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.smart-shield-refresh-btn:hover {
+    background-color: #f0f0f1;
+}
+
+.smart-shield-refresh-btn:active {
+    transform: scale(0.95);
+}
+
+.smart-shield-refresh-btn .dashicons {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.smart-shield-refresh-btn.refreshing .dashicons {
+    animation: smart-shield-spin 1s linear infinite;
+}
+
+.smart-shield-refresh-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Sample Logs Button */
+.smart-shield-sample-btn {
+    font-size: 11px;
+    padding: 2px 8px;
+    height: 24px;
+    line-height: 1.2;
+}
+
+/* Animations */
+@keyframes smart-shield-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.smart-shield-pulse {
+    animation: smart-shield-pulse 1s ease-in-out;
+}
+
+@keyframes smart-shield-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* No Activity State */
+.smart-shield-no-activity {
+    text-align: center;
+    color: #646970;
+    margin: 20px 0;
+    padding: 40px 20px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.smart-shield-no-activity .dashicons {
+    font-size: 48px;
+    color: #c3c4c7;
+    margin-bottom: 10px;
+}
+
+/* View All Logs Button */
+.smart-shield-view-all-logs {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dcdcde;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .smart-shield-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .smart-shield-log-content {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .smart-shield-log-right {
+        text-align: left;
+    }
+    
+    .smart-shield-postbox-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .smart-shield-postbox-header .button-group {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* WordPress Admin Compatibility */
+.wp-admin .smart-shield-setting-card:focus {
+    box-shadow: 0 0 0 2px #2271b1;
+    outline: none;
+}
+
+.wp-admin .smart-shield-stat-card,
+.wp-admin .smart-shield-setting-card,
+.wp-admin .smart-shield-status-item,
+.wp-admin .smart-shield-log-item {
+    box-sizing: border-box;
+}
+
+/* Dashboard Widget Consistency */
+.smart-shield-dashboard .postbox {
+    margin-bottom: 20px;
+}
+
+.smart-shield-dashboard .postbox .inside {
+    margin: 0;
+    padding: 15px;
+}
+
+.smart-shield-dashboard .postbox .inside:empty {
+    padding: 0;
+}
+
+/* Loading States */
+.smart-shield-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.smart-shield-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #c3c4c7;
+    border-top: 2px solid #2271b1;
+    border-radius: 50%;
+    animation: smart-shield-spin 1s linear infinite;
+}
+
+/* Status Indicators */
+.smart-shield-status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.smart-shield-status-indicator.active {
+    background-color: #00a32a;
+}
+
+.smart-shield-status-indicator.inactive {
+    background-color: #d63638;
+}
+
+.smart-shield-status-indicator.configured {
+    background-color: #00a32a;
+}
+
+.smart-shield-status-indicator.not-configured {
+    background-color: #f56e28;
+} 

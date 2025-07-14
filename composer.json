@@ -1,0 +1,20 @@
+{
+    "name": "vplugins/smartshield",
+    "description": "Smart Shield - AI Spam Shield Plugin for WordPress",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "SmartShield\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "rajanvijayan/ai-engine": "dev-main"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Composer\\Installer\\PluginInstaller::postAutoloadDump"
+        ]
+    }
+}

@@ -60,17 +60,18 @@ class LogsPage {
                                     ?>
                                     <div class="stat-card" style="--stat-color: <?php echo $limit_color; ?>;">
                                         <h3 class="stat-value"><?php echo $limit_text; ?></h3>
-                                        <p class="stat-label">Storage Limit</p>
-                                        <?php if ($max_logs != -1): ?>
-                                            <small class="stat-subtext"><?php echo $percentage; ?>% used</small>
-                                        <?php endif; ?>
+                                        <p class="stat-label">
+                                            Storage Limit
+                                            <?php if ($max_logs != -1): ?>
+                                                <span class="stat-subtext"> · <?php echo $percentage; ?>% used</span>
+                                            <?php endif; ?>
+                                        </p>
                                     </div>
                                 </div>
 
                                 <!-- Data Tables -->
                                 <div class="stats-table-section">
                                     <div class="stats-table-box">
-                                        <h2 class="stats-table-heading">📊 Events by Type</h2>
                                         <table class="widefat striped">
                                             <thead>
                                                 <tr>
@@ -90,11 +91,10 @@ class LogsPage {
                                     </div>
 
                                     <div class="stats-table-box">
-                                        <h2 class="stats-table-heading">🌐 Top IP Addresses</h2>
                                         <table class="widefat striped">
                                             <thead>
                                                 <tr>
-                                                    <th>IP Address</th>
+                                                    <th>Top IP Addresses</th>
                                                     <th>Events</th>
                                                 </tr>
                                             </thead>

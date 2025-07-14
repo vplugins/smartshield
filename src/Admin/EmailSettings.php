@@ -33,7 +33,7 @@ class EmailSettings {
                         <th scope="row">Enable Spam Warning</th>
                         <td>
                             <input type="checkbox" name="ss_email_enable_spam_warning" value="1" <?php checked( get_option( 'ss_email_enable_spam_warning' ), 1 ); ?> />
-                            <p class="description">Once you enable you received email with warning message. Otherwise, emails will be automatically rejected.</p>
+                            <p class="description">When enabled, spam emails will be sent with "SPAM" added to the subject line. When disabled, spam emails will be completely blocked.</p>
                         </td>
                     </tr>
                 </table>

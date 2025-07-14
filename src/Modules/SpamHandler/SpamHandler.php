@@ -125,11 +125,8 @@ class SpamHandler {
      * @param string $reason The reason for blocking
      */
     private function block_spam_ip($ip_address, $reason) {
-        // Get block duration from settings (default 24 hours)
-        $duration = get_option('ss_ip_blocked_duration', 86400);
-        
-        // Block the IP
-        $this->ipBlocker->block_ip($ip_address, $duration, $reason, 'spam_handler');
+        // Use default duration from user settings
+        $this->ipBlocker->block_ip($ip_address, null, $reason, 'spam_handler');
         
         // Send notification if enabled
         if (get_option('ss_notification_enabled')) {

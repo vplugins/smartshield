@@ -197,28 +197,28 @@ class SettingsPage {
                             <div class="inside" id="protection-status">
                                 <div class="smart-shield-status-grid">
                                     <div class="smart-shield-status-item">
-                                        <span><strong>🔐 Login Protection:</strong></span>
+                                        <span><strong>🔐 Login Protection</strong></span>
                                         <span class="smart-shield-status-badge <?php echo get_option('ss_login_enabled') ? 'active' : 'inactive'; ?>">
                                             <span class="smart-shield-status-indicator <?php echo get_option('ss_login_enabled') ? 'active' : 'inactive'; ?>"></span>
                                             <?php echo get_option('ss_login_enabled') ? 'Active' : 'Inactive'; ?>
                                         </span>
                                     </div>
                                     <div class="smart-shield-status-item">
-                                        <span><strong>💬 Comment Protection:</strong></span>
+                                        <span><strong>💬 Comment Protection</strong></span>
                                         <span class="smart-shield-status-badge <?php echo get_option('ss_comment_enabled') ? 'active' : 'inactive'; ?>">
                                             <span class="smart-shield-status-indicator <?php echo get_option('ss_comment_enabled') ? 'active' : 'inactive'; ?>"></span>
                                             <?php echo get_option('ss_comment_enabled') ? 'Active' : 'Inactive'; ?>
                                         </span>
                                     </div>
                                     <div class="smart-shield-status-item">
-                                        <span><strong>📧 Email Protection:</strong></span>
+                                        <span><strong>📧 Email Protection</strong></span>
                                         <span class="smart-shield-status-badge <?php echo get_option('ss_email_enabled') ? 'active' : 'inactive'; ?>">
                                             <span class="smart-shield-status-indicator <?php echo get_option('ss_email_enabled') ? 'active' : 'inactive'; ?>"></span>
                                             <?php echo get_option('ss_email_enabled') ? 'Active' : 'Inactive'; ?>
                                         </span>
                                     </div>
                                     <div class="smart-shield-status-item">
-                                        <span><strong>🤖 AI Protection:</strong></span>
+                                        <span><strong>🤖 AI Protection</strong></span>
                                         <span class="smart-shield-status-badge <?php echo get_option('ss_ai_api_key') ? 'configured' : 'not-configured'; ?>">
                                             <span class="smart-shield-status-indicator <?php echo get_option('ss_ai_api_key') ? 'configured' : 'not-configured'; ?>"></span>
                                             <?php echo get_option('ss_ai_api_key') ? 'Configured' : 'Not Configured'; ?>

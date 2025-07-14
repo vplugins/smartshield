@@ -20,6 +20,9 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 use SmartShield\Admin\SettingsPage;
+use SmartShield\Front\IPBlockerFrontend;
+use SmartShield\Front\LoginHandlerFrontend;
+use SmartShield\Modules\LoginHandler\LoginHandler;
 
 // Initialize the plugin
 function smart_shield_init() {
@@ -27,5 +30,12 @@ function smart_shield_init() {
     if ( is_admin() ) {
         new SettingsPage();
     }
+    
+    // Load frontend IP blocker
+    new IPBlockerFrontend();
+    
+    // Load login handler (both backend and frontend)
+    new LoginHandler();
+    new LoginHandlerFrontend();
 }
 add_action( 'plugins_loaded', 'smart_shield_init' );

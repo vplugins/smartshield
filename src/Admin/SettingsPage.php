@@ -7,6 +7,7 @@ class SettingsPage {
     private $emailSettings;
     private $otherSettings;
     private $logsPage;
+    private $ipBlockerPage;
     private $logger;
 
     public function __construct() {
@@ -20,6 +21,7 @@ class SettingsPage {
         $this->emailSettings = new EmailSettings();
         $this->otherSettings = new OtherSettings();
         $this->logsPage = new LogsPage();
+        $this->ipBlockerPage = new IPBlockerPage();
         $this->logger = new Logger();
     }
 
@@ -93,6 +95,16 @@ class SettingsPage {
             'manage_options',
             'smart-shield-logs',
             [ $this->logsPage, 'create_page' ]
+        );
+
+        // IP Blocker submenu
+        add_submenu_page(
+            'smart-shield',
+            'IP Blocker',
+            'IP Blocker',
+            'manage_options',
+            'smart-shield-ip-blocker',
+            [ $this->ipBlockerPage, 'create_page' ]
         );
     }
 

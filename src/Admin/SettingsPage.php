@@ -110,7 +110,7 @@ class SettingsPage {
 
     public function create_dashboard_page() {
         $stats = $this->logger->get_stats();
-        $recent_logs = $this->logger->get_recent_logs(5);
+        $recent_logs = $this->logger->get_recent_logs(4);
         ?>
         <div class="wrap smart-shield-dashboard">
             <h1>Smart Shield Dashboard</h1>
@@ -161,9 +161,11 @@ class SettingsPage {
             <!-- Main Content Grid -->
             <div class="dashboard-widgets-wrap">
                 <div class="metabox-holder">
-                    <div class="postbox-container" style="width: 33.33%;">
+                    <div class="postbox-container">
                         <div class="postbox">
-                            <h2 class="hndle"><span>Quick Settings</span></h2>
+                            <div class="smart-shield-postbox-header">
+                                <h2 class="hndle"><span>Quick Settings</span></h2>
+                            </div>
                             <div class="inside">
                                 <div class="smart-shield-settings-grid">
                                     <a href="<?php echo admin_url('admin.php?page=smart-shield-login'); ?>" class="smart-shield-setting-card login">
@@ -187,13 +189,10 @@ class SettingsPage {
                         </div>
                     </div>
 
-                    <div class="postbox-container" style="width: 33.33%;">
+                    <div class="postbox-container">
                         <div class="postbox">
                             <div class="smart-shield-postbox-header">
                                 <h2 class="hndle"><span>Protection Status</span></h2>
-                                <button type="button" class="button smart-shield-refresh-btn" data-refresh="status">
-                                    <span class="dashicons dashicons-update"></span>
-                                </button>
                             </div>
                             <div class="inside" id="protection-status">
                                 <div class="smart-shield-status-grid">
@@ -230,13 +229,11 @@ class SettingsPage {
                         </div>
                     </div>
 
-                    <div class="postbox-container" style="width: 33.33%;">
+                    <div class="postbox-container">
                         <div class="postbox">
                             <div class="smart-shield-postbox-header">
                                 <h2 class="hndle"><span>Recent Activity</span></h2>
-                                <button type="button" class="button smart-shield-refresh-btn" data-refresh="logs">
-                                    <span class="dashicons dashicons-update"></span>
-                                </button>
+                                <a href="<?php echo admin_url('admin.php?page=smart-shield-logs'); ?>" class="button button-secondary">View All Logs</a>
                             </div>
                             <div class="inside" id="recent-logs">
                                 <?php if (empty($recent_logs)): ?>
@@ -270,9 +267,6 @@ class SettingsPage {
                                                 </div>
                                             </div>
                                         <?php endforeach; ?>
-                                    </div>
-                                    <div class="smart-shield-view-all-logs">
-                                        <a href="<?php echo admin_url('admin.php?page=smart-shield-logs'); ?>" class="button button-secondary">View All Logs</a>
                                     </div>
                                 <?php endif; ?>
                             </div>

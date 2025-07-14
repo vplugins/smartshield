@@ -25,65 +25,95 @@ class LogsPage {
         ?>
         <div class="wrap">
             <h1>Smart Shield Logs</h1>
-            
-            <!-- Statistics Overview -->
+            <p>View the logs of events detected by Smart Shield. Use the filters to narrow down the results.</p>
             <div class="dashboard-widgets-wrap">
                 <div class="metabox-holder">
-                    <div class="postbox-container" style="width: 100%;">
+                    <div class="postbox-container full-width">
                         <div class="postbox">
-                            <h2 class="hndle"><span>Statistics Overview</span></h2>
-                            <div class="inside">
-                                <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-                                    <div class="stat-box" style="text-align: center; padding: 10px; background: #f0f0f1; border-radius: 5px;">
-                                        <h3 style="margin: 0; font-size: 24px; color: #135e96;"><?php echo number_format($stats['total']); ?></h3>
-                                        <p style="margin: 5px 0 0 0;">Total Events</p>
-                                    </div>
-                                    <div class="stat-box" style="text-align: center; padding: 10px; background: #f0f0f1; border-radius: 5px;">
-                                        <h3 style="margin: 0; font-size: 24px; color: #d63638;"><?php echo number_format($stats['recent_24h']); ?></h3>
-                                        <p style="margin: 5px 0 0 0;">Last 24 Hours</p>
-                                    </div>
-                                    <div class="stat-box" style="text-align: center; padding: 10px; background: #f0f0f1; border-radius: 5px;">
-                                        <h3 style="margin: 0; font-size: 24px; color: #00a32a;"><?php echo count($stats['top_ips']); ?></h3>
-                                        <p style="margin: 5px 0 0 0;">Unique IPs</p>
-                                    </div>
-                                    <div class="stat-box" style="text-align: center; padding: 10px; background: #f0f0f1; border-radius: 5px;">
-                                        <?php 
-                                        $max_logs = get_option('ss_max_logs_count', 10000);
-                                        $limit_text = ($max_logs == -1) ? 'Unlimited' : number_format($max_logs);
-                                        $percentage = ($max_logs != -1 && $max_logs > 0) ? round(($stats['total'] / $max_logs) * 100, 1) : 0;
-                                        $color = ($percentage > 90) ? '#d63638' : (($percentage > 75) ? '#f56e28' : '#00a32a');
-                                        ?>
-                                        <h3 style="margin: 0; font-size: 24px; color: <?php echo $color; ?>;"><?php echo $limit_text; ?></h3>
-                                        <p style="margin: 5px 0 0 0;">Storage Limit</p>
+                            <h2 class="hndle stats-header">
+                                <span>📈 Statistics Overview</span>
+                            </h2>
+                            <div class="inside stats-inside">
+
+                                <!-- Stat Cards Row -->
+                                <div class="stat-cards-row">
+                                    <?php
+                                    $stat_cards = [
+                                        ['label' => 'Total Events', 'value' => number_format($stats['total']), 'color' => '#135e96'],
+                                        ['label' => 'Last 24 Hours', 'value' => number_format($stats['recent_24h']), 'color' => '#d63638'],
+                                        ['label' => 'Unique IPs', 'value' => count($stats['top_ips']), 'color' => '#00a32a'],
+                                    ];
+                                    ?>
+                                    <?php foreach ($stat_cards as $card): ?>
+                                        <div class="stat-card" style="--stat-color: <?php echo $card['color']; ?>;">
+                                            <h3 class="stat-value"><?php echo $card['value']; ?></h3>
+                                            <p class="stat-label"><?php echo $card['label']; ?></p>
+                                        </div>
+                                    <?php endforeach; ?>
+
+                                    <!-- Storage Limit -->
+                                    <?php
+                                    $max_logs = get_option('ss_max_logs_count', 10000);
+                                    $limit_text = ($max_logs == -1) ? 'Unlimited' : number_format($max_logs);
+                                    $percentage = ($max_logs != -1 && $max_logs > 0) ? round(($stats['total'] / $max_logs) * 100, 1) : 0;
+                                    $limit_color = ($percentage > 90) ? '#d63638' : (($percentage > 75) ? '#f56e28' : '#00a32a');
+                                    ?>
+                                    <div class="stat-card" style="--stat-color: <?php echo $limit_color; ?>;">
+                                        <h3 class="stat-value"><?php echo $limit_text; ?></h3>
+                                        <p class="stat-label">Storage Limit</p>
                                         <?php if ($max_logs != -1): ?>
-                                            <small style="color: #666;"><?php echo $percentage; ?>% used</small>
+                                            <small class="stat-subtext"><?php echo $percentage; ?>% used</small>
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                                
-                                <div style="display: flex; justify-content: space-between;">
-                                    <div style="width: 48%;">
-                                        <h4>Events by Type</h4>
-                                        <ul>
-                                            <?php foreach ($stats['by_type'] as $type): ?>
-                                                <li><strong><?php echo esc_html(ucfirst($type->event_type)); ?>:</strong> <?php echo number_format($type->count); ?></li>
-                                            <?php endforeach; ?>
-                                        </ul>
+
+                                <!-- Data Tables -->
+                                <div class="stats-table-section">
+                                    <div class="stats-table-box">
+                                        <h2 class="stats-table-heading">📊 Events by Type</h2>
+                                        <table class="widefat striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Event Type</th>
+                                                    <th>Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($stats['by_type'] as $type): ?>
+                                                    <tr>
+                                                        <td><?php echo esc_html(ucfirst($type->event_type)); ?></td>
+                                                        <td><?php echo number_format($type->count); ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div style="width: 48%;">
-                                        <h4>Top IP Addresses</h4>
-                                        <ul>
-                                            <?php foreach (array_slice($stats['top_ips'], 0, 5) as $ip): ?>
-                                                <li><strong><?php echo esc_html($ip->ip_address); ?>:</strong> <?php echo number_format($ip->count); ?> events</li>
-                                            <?php endforeach; ?>
-                                        </ul>
+
+                                    <div class="stats-table-box">
+                                        <h2 class="stats-table-heading">🌐 Top IP Addresses</h2>
+                                        <table class="widefat striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>IP Address</th>
+                                                    <th>Events</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach (array_slice($stats['top_ips'], 0, 5) as $ip): ?>
+                                                    <tr>
+                                                        <td><?php echo esc_html($ip->ip_address); ?></td>
+                                                        <td><?php echo number_format($ip->count); ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div> <!-- inside -->
+                        </div> <!-- postbox -->
                     </div>
-                </div>
-            </div>
+                </div> <!-- postbox-container -->
+            </div> <!-- dashboard-widgets-wrap -->
 
             <!-- Filters -->
             <div class="tablenav top">
